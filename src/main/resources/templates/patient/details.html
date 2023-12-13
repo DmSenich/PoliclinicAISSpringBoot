@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Данные пациента</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Подробности</h1>
+    <dl class="row">
+        <dt class="col-sm-2" >Фамилия</dt>
+        <dd class="col-sm-10" th:text = "${patient.lastName}"></dd>
+        <dt class="col-sm-2">Имя</dt>
+        <dd class="col-sm-10" th:text = "${patient.firstName}"></dd>
+        <dt class="col-sm-2">Отчество</dt>
+        <dd class="col-sm-10" th:text = "${patient.patr}"></dd>
+        <dt class="col-sm-2">Дата рождения</dt>
+        <dd class="col-sm-10" th:text="${patient.birthDate}"></dd>
+
+        <dt class="col-sm-2">Область</dt>
+        <dd class="col-sm-10" th:text="${patient.area}"></dd>
+        <dt class="col-sm-2">Город</dt>
+        <dd class="col-sm-10" th:text = "${patient.city}"></dd>
+        <dt class="col-sm-2">Дом</dt>
+        <dd class="col-sm-10" th:text = "${patient.house}"></dd>
+        <dt class="col-sm-2">Квартира</dt>
+        <dd class="col-sm-10" th:text = "${patient.apartment}"></dd>
+    </dl>
+    <a class="btn btn-info" th:href="@{'/patients/details-with-visitings/' +
+${patient.id}}">С визитами</a>
+    <a class="btn btn-info" th:href="@{'/patients/details-with-diseases/' +
+${patient.id}}">С диагнозами</a>
+    <table th:if="${diseases!=null && diseases.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b> Название диагноза </b></td>
+            <td><b> Описание диагноза </b></td>
+            <td><b> Дата </b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="disease : ${diseases}">
+            <td th:text="${disease.diseaseType.name}"/>
+            <td th:text="${disease.description}"/>
+            <td th:text="${disease.visiting.date}"/>
+        </tr>
+        </tbody>
+    </table>
+    <table th:if="${visitings != null && visitings.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b> ФИО доктора </b></td>
+            <td><b> ФИО пациента </b></td>
+            <td><b> Дата </b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="visiting : ${visitings}">
+            <td th:text="${visiting.getFIODoctor()}"/>
+            <td th:text="${visiting.getFIOPatient()}"/>
+            <td th:text="${visiting.date}"/>
+            <td><a class="btn btn-info" th:href="@{'/visitings/details/' +
+${visiting.id}}">Информация</a></td>
+            <td><a class="btn btn-warning" th:href="@{'/visitings/update/' +
+${visiting.id}}">Редактировать</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/visitings/delete/' +
+${visiting.id}}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Больница</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Запись на прием</h1>
+    <div>
+        <p>Доктор:
+        <p type="text" th:text="${FIODoctor}"/>
+        </p>
+        <p>Пациент:
+        <p type="text" th:text="${FIOPatient}"/>
+        </p>
+        <p>Дата
+        <p type="date" th:text="${date}"/>
+
+        </p>
+    </div>
+    <form action="#" th:action="@{/visitings/confirm-create}" th:object="${visiting}"
+          method="post">
+        <input type="hidden"  th:field="*{doctor}">
+        <input type="hidden" th:field="*{patient}">
+        <input type="hidden"  th:field="*{date}"/>
+        <p><input type="submit" value="Завершить"/>
+            <input type="reset" value="Сброс"/></p>
+    </form>
+<!--    <a class="btn btn-secondary" th:href="@{'/patients/new'}">Завершить</a>-->
+</div>
+</body>
+</html>

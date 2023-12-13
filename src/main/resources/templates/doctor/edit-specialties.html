@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Изменить данные доктора</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Специальности доктора</h1>
+    <table class="table table-hover">
+        <a class="btn btn-secondary" th:href="@{'/doctors/main'}">Доктора</a>
+        <thead class="thead-dark">
+        <tr>
+            <td><b>Специальности</b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="specialty : ${allSpecialties}">
+            <td th:text="${specialty.name}"/>
+            <td>
+                <form action="#" th:if="${oldSpecialties.contains(specialty)}" th:action="@{/doctors/remove-specialties}"
+                method="post">
+                    <input type="hidden" th:value="${doctor.id}" name="iddoc"/>
+                    <input type="hidden" th:value="${specialty.id}" name="idspec"/>
+                    <input type="submit" value="Убрать"/>
+                </form>
+                <form action="#" th:if="${!oldSpecialties.contains(specialty)}" th:action="@{/doctors/add-specialties}"
+                      method="post">
+                    <input type="hidden" th:value="${doctor.id}" name="iddoc"/>
+                    <input type="hidden" th:value="${specialty.id}" name="idspec"/>
+                    <input type="submit" value="Добавить"/>
+                </form>
+            </td>
+        </tr>
+<!--        <tr th:each="specialty : ${oldSpecialties}">-->
+<!--            <td th:text="${specialty.name}"/>-->
+<!--            <td>-->
+<!--                <form action="#" th:action="@{/doctors/remove-specialties}"-->
+<!--                      method="post">-->
+<!--                    <input type="hidden" th:value="${doctor.id}" name="iddoc"/>-->
+<!--                    <input type="hidden" th:value="${specialty.id}" name="idspec"/>-->
+<!--                    <input type="submit" value="Убрать"/>-->
+<!--                </form>-->
+<!--&lt;!&ndash;                <a class="btn btn-info" th:href="@{'/doctors/remove-specialties/' + ${doctor.id}+'&'+${specialty.id}}">Убрать</a></td>&ndash;&gt;-->
+<!--        </tr>-->
+<!--        <tr th:each="specialty : ${otherSpecialties}">-->
+<!--            <td th:text="${specialty.name}"/>-->
+<!--            <td>-->
+<!--                <form action="#" th:action="@{/doctors/add-specialties}"-->
+<!--                      method="post">-->
+<!--                    <input type="hidden" th:value="${doctor.id}" name="iddoc"/>-->
+<!--                    <input type="hidden" th:value="${specialty.id}" name="idspec"/>-->
+<!--                    <input type="submit" value="Добавить"/>-->
+<!--                </form>-->
+<!--&lt;!&ndash;                <a class="btn btn-info" th:href="@{'/doctors/add-specialties/' + ${doctor.id}+'&'+${specialty.id}}">Добавить</a></td>&ndash;&gt;-->
+<!--        </tr>-->
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

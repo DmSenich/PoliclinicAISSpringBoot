@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Новый диагноз</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Форма информации о диагнозе</h1>
+    <form action="#" th:action="@{'/visitings/'+${visiting.id}+'/diseases/new'}" th:object="${disease}"
+          method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{visiting}"/>
+        <input type="hidden" th:field="*{diseaseType}"/>
+        <p>Тип заболевания:
+        <p type="text" th:if="diseaseType != null" th:text="${diseaseType.name}"></p>
+        <a class="btn btn-info" th:href="@{/disease/disease-type}">Изменить тип заболевания</a>
+            </p>
+
+        <p>Описание:
+            <input type="text" placeholder="Введите описание диагноза" th:field="*{description}"/></p>
+        <p>Дата:
+            <p type="text"th:text="${visiting.date}"/></p>
+        <p><input type="submit" value="Отправить"/>
+            <input type="reset" value="Сброс"/></p>
+    </form>
+
+</div>
+</body>
+</html>

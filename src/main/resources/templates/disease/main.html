@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Больница</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Поставленные диагнозы</h1>
+    <span th:if="${diseases.size() == 0}">Список диагнозов пуст<br></span>
+    <table th:if="${diseases.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b> Название диагноза </b></td>
+            <td><b> Описание диагноза </b></td>
+            <td><b> Дата </b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="disease : ${diseases}">
+            <td th:text="${disease.diseaseType.name}"/>
+            <td th:text="${disease.description}"/>
+            <td th:text="${disease.visiting.date}"/>
+            <div th:if="OnlyVisiting == true">
+                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +
+${disease.id}}">Информация</a></td>
+                <td><a class="btn btn-warning" th:href="@{'/visitings/details/' +${disease.visiting.id}+'/diseases/update/' +
+${disease.id}}">Редактировать</a></td>
+                <td><a class="btn btn-danger" th:href="@{'/visitings/details/' +${disease.visiting.id}+'/diseases/delete/' +
+${disease.id}}">Удалить</a></td>
+            </div>
+            <div th:unless="OnlyVisiting == true">
+                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +
+${disease.id}}">Информация</a></td>
+                <td><a class="btn btn-warning" th:href="@{'/diseases/update/' +
+${disease.id}}">Редактировать</a></td>
+                <td><a class="btn btn-danger" th:href="@{'/diseases/delete/' +
+${disease.id}}">Удалить</a></td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary" th:href="@{'/visitings/details/'+${idVisiting}+'/diseases/new'}">Добавить диагноз</a>
+</div>
+</body>
+</html>

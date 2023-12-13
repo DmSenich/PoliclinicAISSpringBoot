@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Больница</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Диагнозы</h1>
+    <span th:if="${diseaseTypes.size() == 0}">Список диагнозов пуст<br></span>
+    <table th:if="${diseaseTypes.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b>Название</b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="diseaseType : ${diseaseTypes}">
+            <td th:text="${diseaseType.name}"/>
+            <td><a class="btn btn-info" th:href="@{'/disease-types/details/' +
+${diseaseType.id}}">Информация</a></td>
+            <td><a class="btn btn-warning" th:href="@{'/disease-types/update/' +
+${diseaseType.id}}">Редактировать</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/disease-types/delete/' +
+${diseaseType.id}}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary" th:href="@{'/disease-types/new'}">Добавить диагноз</a>
+</div>
+</body>
+</html>

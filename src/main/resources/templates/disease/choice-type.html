@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Больница</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Выбор типа диагноза</h1>
+    <span th:if="${diseaseTypes.size() == 0}">Список типов пуст<br></span>
+    <table th:if="${diseaseTypes.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b> Название </b></td>
+            <td><b>Действие</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="diseaseType : ${diseaseTypes}">
+            <td th:text="${diseaseType.name}"/>
+            <td>
+                <form action="#" th:action="@{/disease/disease-type}"
+                method="post">
+                    <input type="hidden" th:value="${diseaseType.id}" th:name="idType"/>
+<!--                    <input type="hidden" th:value="${idpatient}" th:name="idpatient">-->
+                    <p><input type="submit" value="Выбрать"/></p>
+                </form>
+
+<!--                <a class="btn btn-secondary" th:if="${patient == null}" th:href="@{'/visitings/choice-patient'}">Выбрать</a>-->
+<!--                <a class="btn btn-secondary" th:if="${patient != null}" th:href="@{'/visitings/choice-date'}">Выбрать</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

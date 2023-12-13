@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Больница</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Доктора</h1>
+    <span th:if="${doctors.size() == 0}">Список докторов пуст<br></span>
+    <table th:if="${doctors.size() > 0}" class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <td><b> Фамилия </b></td>
+            <td><b> Имя </b></td>
+            <td><b>Отчество</b></td>
+            <td><b>Специальности</b></td>
+            <td><b>Действия</b></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="doctor : ${doctors}">
+            <td th:text="${doctor.lastName}"/>
+            <td th:text="${doctor.firstName}"/>
+            <td th:text="${doctor.patr}"/>
+            <td th:text="${doctor.getStringSpecialties()}"/>
+            <td><a class="btn btn-info" th:href="@{'/doctors/details/' +
+${doctor.id}}">Информация</a></td>
+            <td><a class="btn btn-warning" th:href="@{'/doctors/update/' +
+${doctor.id}}">Редактировать</a></td>
+            <td><a class="btn btn-warning" th:href="@{'/doctors/update-specialties/' +
+${doctor.id}}">Изменить специальности</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/doctors/delete/' +
+${doctor.id}}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-secondary" th:href="@{'/doctors/new'}">Добавить доктора</a>
+    <a class="btn btn-secondary" th:href="@{'/specialties/new'}">Добавить специалиальность</a>
+</div>
+</body>
+</html>
