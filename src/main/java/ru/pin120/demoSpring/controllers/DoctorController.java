@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pin120.demoSpring.models.Doctor;
+import ru.pin120.demoSpring.models.Patient;
 import ru.pin120.demoSpring.models.Specialty;
 import ru.pin120.demoSpring.models.Visiting;
 import ru.pin120.demoSpring.service.serviceImpl.DoctorServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.SpecialtyServiceImpl;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +41,27 @@ public class DoctorController {
     }
     @PostMapping("/new")
     public String newDoctor(@ModelAttribute Doctor doctor, Model model){
-        doctorService.create(doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(),doctor.getPathPhoto(), new ArrayList<Specialty>());
+        MultipartFile file = doctor.getPhotoFile();
+        byte[] photo = null;
+        try{
+            if(file != null && !file.isEmpty()){
+                photo = file.getBytes();
+            }
+        }catch (IOException exception){
+            System.out.println(exception.getMessage());
+        }
+        doctorService.create(doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(),doctor.getPathPhoto(), photo, new ArrayList<Specialty>());
         return "redirect:/doctors/main";
+    }
+
+    @GetMapping("/details/{id}")
+    public String detailsDoctor(Model model, @PathVariable("id") Long id){
+        Optional<Doctor> optionalDoctor = doctorService.findOneById(id);
+        if(optionalDoctor.isEmpty()){
+            return "redirect:/doctors/main";
+        }
+        model.addAttribute("doctor", optionalDoctor.get());
+        return "doctor\\details";
     }
 
     @GetMapping("/update/{id}")
@@ -52,10 +74,19 @@ public class DoctorController {
         return "doctor\\edit";
     }
     @PostMapping("/update")
-    public String editDoctor(@ModelAttribute Doctor doctor, Model model){
+    public String editDoctor(@ModelAttribute Doctor doctor, @RequestParam("file") MultipartFile file, Model model){
+        //MultipartFile docfile = doctor.getPhotoFile();
+        byte[] photo = null;
+        try{
+            if(file != null && !file.isEmpty()){
+                photo = file.getBytes();
+            }
+        }catch (IOException exception){
+            System.out.println(exception.getMessage());
+        }
         List<Specialty> specialties = doctorService.findOneById(doctor.getId()).get().getSpecialties();
         List<Visiting> visitings = doctorService.findOneById(doctor.getId()).get().getVisitings();
-        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(), specialties, visitings);
+        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(),photo, specialties, visitings);
         return "redirect:/doctors/main";
     }
 
@@ -85,7 +116,7 @@ public class DoctorController {
         List<Visiting> visitings = doctor.getVisitings();
         Specialty remove = specialtyService.findOneById(idspec).get();
         specialties.remove(remove);
-        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(), specialties, visitings);
+        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(), doctor.getPhoto(), specialties, visitings);
         return "redirect:/doctors/update-specialties/"+doctor.getId();
     }
     @PostMapping("/add-specialties")
@@ -95,7 +126,7 @@ public class DoctorController {
         List<Visiting> visitings = doctor.getVisitings();
         Specialty newSpec = specialtyService.findOneById(idspec).get();
         specialties.add(newSpec);
-        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(), specialties, visitings);
+        doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(),doctor.getPhoto(), specialties, visitings);
         return "redirect:/doctors/update-specialties/"+doctor.getId();
     }
     @GetMapping("/delete/{id}")

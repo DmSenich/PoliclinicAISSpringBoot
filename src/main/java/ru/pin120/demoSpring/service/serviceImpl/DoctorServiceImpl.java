@@ -46,19 +46,20 @@ public class DoctorServiceImpl implements DoctorService {
 //    }
 
     @Override
-    public void create(String firstName, String lastName, String part, int workExp, String pathPhoto, List<Specialty> specialties) {
+    public void create(String firstName, String lastName, String part, int workExp, String pathPhoto,byte[] photo, List<Specialty> specialties) {
         Doctor doctor = new Doctor();
         doctor.setFirstName(firstName);
         doctor.setLastName(lastName);
         doctor.setPatr(part);
         doctor.setWorkExp(workExp);
         doctor.setPathPhoto(pathPhoto);
+        doctor.setPhoto(photo);
         doctor.setSpecialties(specialties);
         doctorRepository.save(doctor);
     }
 
     @Override
-    public void update(Long id, String firstName, String lastName, String part, int workExp, String pathPhoto, List<Specialty> specialties, List<Visiting> visitings) {
+    public void update(Long id, String firstName, String lastName, String part, int workExp, String pathPhoto,byte[] photo, List<Specialty> specialties, List<Visiting> visitings) {
         Doctor doctor = new Doctor();
         doctor.setId(id);
         doctor.setFirstName(firstName);
@@ -66,6 +67,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setPatr(part);
         doctor.setWorkExp(workExp);
         doctor.setPathPhoto(pathPhoto);
+        doctor.setPhoto(photo);
         doctor.setSpecialties(specialties);
         doctor.setVisitings(visitings);
         doctorRepository.save(doctor);

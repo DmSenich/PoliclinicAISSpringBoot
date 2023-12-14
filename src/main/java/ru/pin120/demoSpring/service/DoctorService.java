@@ -19,8 +19,8 @@ public interface DoctorService {
     Optional<Doctor> findOneById(Long id);
 //    void updateSpecialty(int id, List<Specialty> specialties);
 //    Collection<Doctor> findAllOfSpecialty(Long id);
-    void create(String firstName, String lastName, String part, int workExp, String pathPhoto, List<Specialty> specialties) ;
-    void update(Long id, String firstName, String lastName, String part, int workExp, String pathPhoto, List<Specialty> specialties, List<Visiting> visitings) ;
+    void create(String firstName, String lastName, String part, int workExp, String pathPhoto, byte[] photo, List<Specialty> specialties) ;
+    void update(Long id, String firstName, String lastName, String part, int workExp, String pathPhoto,byte[] photo, List<Specialty> specialties, List<Visiting> visitings) ;
     boolean delete(Long id);
 
     boolean existsById(Long id);

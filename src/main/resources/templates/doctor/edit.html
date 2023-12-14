@@ -13,7 +13,7 @@
 <div class="container">
     <h1>Форма информации о докторе</h1>
     <form action="#" th:action="@{/doctors/update}" th:object="${doctor}"
-          method="post">
+          method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}"/>
         <p>Фамилия:
             <input type="text" placeholder="Введите фамилию" th:field="*{lastName}"/></p>
@@ -23,6 +23,11 @@
             <input type="text" placeholder="Введите отчество" th:field="*{patr}"/></p>
         <p>Стаж работы:
             <input type="text" placeholder="Введите стаж в годах" th:field="*{workExp}"/></p>
+        <p>Фото:
+            <input type="file"accept="image/*" name="file" th:id="file"/>
+            <span th:unless="${doctor.photo != null}">No photo available</span>
+        </p>
+
         <p><input type="submit" value="Отправить"/>
             <input type="reset" value="Сброс"/></p>
     </form>

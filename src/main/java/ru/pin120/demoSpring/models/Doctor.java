@@ -2,6 +2,7 @@ package ru.pin120.demoSpring.models;
 
 import lombok.*;
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor")
     private List<Visiting> visitings;
+    @Transient
+    private MultipartFile photoFile;
 
     public String getStringSpecialties(){
         List<String> specialtiesString = new ArrayList<>();
