@@ -41,9 +41,9 @@ public class Doctor {
     /** Поле имя файла(фото) */
     @Column(name = "pathphoto")
     private String pathPhoto;
-    @Column(name = "photo", columnDefinition = "BLOB")
-    private byte[] photo;
     /** Список специальностей */
+    @Transient
+    private byte[] photo;
     @ManyToMany
     @JoinTable(name = "doctors_specialties",
     joinColumns = @JoinColumn(name = "idspecialty"),
@@ -52,9 +52,6 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor")
     private List<Visiting> visitings;
-    @Transient
-    private MultipartFile photoFile;
-
     public String getStringSpecialties(){
         List<String> specialtiesString = new ArrayList<>();
         for (Specialty sp:

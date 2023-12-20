@@ -5,19 +5,22 @@ import jakarta.persistence.TemporalType;
 import lombok.SneakyThrows;
 import org.opencv.calib3d.StereoBM;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.pin120.demoSpring.models.Disease;
-import ru.pin120.demoSpring.models.Doctor;
-import ru.pin120.demoSpring.models.Patient;
-import ru.pin120.demoSpring.models.Visiting;
+import ru.pin120.demoSpring.models.*;
 import ru.pin120.demoSpring.service.serviceImpl.DoctorServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.PatientServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.VisitingServiceImpl;
 
 import javax.print.Doc;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -44,6 +47,8 @@ public class VisitingController {
 
     @GetMapping("/main")
     public String getVisitings(Model model){
+        selectIdPatient = -1;
+        selectIdPatient = -1;
         List<Visiting> visitings =
                 (List<Visiting>)visitingService.findAll();
         model.addAttribute("visitings", visitings);
@@ -51,6 +56,11 @@ public class VisitingController {
         model.addAttribute("idpatient", -1);
         return "visiting\\main";
     }
+//    @GetMapping("/filter?startDate=2021-06-09&endDate=2023-11-01")
+//    public String filter(){
+//
+//    }
+
 //    @GetMapping("/new")
 //    public String newVisitings(Model model){
 //        model.addAttribute("visiting", new Visiting());
@@ -175,7 +185,7 @@ public class VisitingController {
         //model.addAttribute("patient", patient);
         model.addAttribute("FIODoctor", String.join(" ",doctor.getLastName(), doctor.getFirstName(),doctor.getPatr()));
         model.addAttribute("FIOPatient", String.join(" ", patient.getLastName(), patient.getFirstName(), patient.getPatr()));
-        model.addAttribute("date", selectDate);
+        model.addAttribute("date", formatter.format(selectDate));
 
         model.addAttribute("visiting", visiting);
         return "visiting\\confirm-create";
@@ -232,4 +242,6 @@ public class VisitingController {
         }
         return "redirect:/visitings/main";
     }
+
+
 }

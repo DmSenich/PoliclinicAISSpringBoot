@@ -23,9 +23,9 @@
             <input type="text" placeholder="Введите отчество" th:field="*{patr}"/></p>
         <p>Стаж работы:
             <input type="text" placeholder="Введите стаж в годах" th:field="*{workExp}"/></p>
+        <input type="hidden" th:field="*{pathPhoto}">
         <p>Фото:
             <input type="file"accept="image/*" name="file" th:id="file"/>
-            <span th:unless="${doctor.photo != null}">No photo available</span>
         </p>
 
         <p><input type="submit" value="Отправить"/>

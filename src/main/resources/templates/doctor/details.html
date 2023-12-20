@@ -24,8 +24,7 @@
     </dl>
 
     <p>Фото:
-        <img th:if="${doctor.photo != null}" th:src="@{'data:image/png;base64,' + #strings.bytes(doctor.photo)}" alt="Doctor Photo"/>
-        <span th:unless="${doctor.photo != null}">No photo available</span>
+        <img  th:src="@{'data:image/' + ${type} +';base64,' + ${encodedPhoto}}" width="256dp" alt="Doctor Photo"/>
     </p>
 
 

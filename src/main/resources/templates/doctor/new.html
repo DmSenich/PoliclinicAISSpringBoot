@@ -24,8 +24,7 @@
         <p>Стаж работы:
             <input type="text" placeholder="Введите стаж в годах" th:field="*{workExp}"/></p>
         <p>Фото:
-            <input type="file"accept="image/*" name="photo" id = "photo"/>
-            <span th:unless="${doctor.photo != null}">No photo available</span>
+            <input type="file"accept="image/*" name="file" th:id="file"/>
         </p>
         <p><input type="submit" value="Отправить"/>
             <input type="reset" value="Сброс"/></p>

@@ -24,8 +24,8 @@
         <tbody>
         <tr th:each="diseaseType : ${diseaseTypes}">
             <td th:text="${diseaseType.name}"/>
-            <td><a class="btn btn-info" th:href="@{'/disease-types/details/' +
-${diseaseType.id}}">Информация</a></td>
+            <td><a class="btn btn-info" th:href="@{'/disease-types/generate-doc/' +
+${diseaseType.id}}">Отчет о случаях заболевания</a></td>
             <td><a class="btn btn-warning" th:href="@{'/disease-types/update/' +
 ${diseaseType.id}}">Редактировать</a></td>
             <td><a class="btn btn-danger" th:href="@{'/disease-types/delete/' +

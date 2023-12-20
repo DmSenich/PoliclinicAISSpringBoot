@@ -12,6 +12,16 @@
 <body>
 <div class="container">
     <h1>Посещения</h1>
+    <form th:if="${ofDoctor}" th:action="@{'/doctors/details/' + ${doctorId} + '/visitings/filter'}" method="get">
+        <label for="startDate">Начальная дата:</label>
+        <input type="date" id="startDate" name="startDate">
+
+        <label for="endDate">Конечная дата:</label>
+        <input type="date" id="endDate" name="endDate">
+
+        <button type="submit">Применить фильтр</button>
+    </form>
+    <a class="btn btn-secondary"  th:if="${ofDoctor}" th:href="@{'/doctors/details/' + ${doctorId} + '/visitings/generate-doc'}">Сгенерировать документ (количество визитов)</a>
     <span th:if="${visitings.size() == 0}">Список посещений пуст<br></span>
     <table th:if="${visitings.size() > 0}" class="table table-hover">
         <thead class="thead-dark">
@@ -37,7 +47,7 @@ ${visiting.id}}">Удалить</a></td>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-secondary" th:href="@{'/visitings/choice-doctor'}">Добавить посещение</a>
+    <a class="btn btn-secondary" th:unless="${ofDoctor}" th:href="@{'/visitings/choice-doctor'}">Добавить посещение</a>
 </div>
 </body>
 </html>

@@ -24,8 +24,8 @@
         <tbody>
         <tr th:each="specialty : ${specialties}">
             <td th:text="${specialty.name}"/>
-            <td><a class="btn btn-info" th:href="@{'/specialties/details/' +
-${specialty.id}}">Информация</a></td>
+            <td><a class="btn btn-info" th:href="@{'/specialties/generate-doc/' +
+${specialty.id}}">Перечень специалистов</a></td>
             <td><a class="btn btn-warning" th:href="@{'/specialties/update/' +
 ${specialty.id}}">Редактировать</a></td>
             <td><a class="btn btn-danger" th:href="@{'/specialties/delete/' +

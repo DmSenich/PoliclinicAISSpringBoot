@@ -1,6 +1,8 @@
 package ru.pin120.demoSpring.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,11 +11,19 @@ import ru.pin120.demoSpring.models.DiseaseType;
 import ru.pin120.demoSpring.service.serviceImpl.DiseaseTypeServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.SpecialtyServiceImpl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.beans.factory.support.InstanceSupplier.using;
+
 @Controller
 @RequestMapping("/disease-types")
 public class DiseaseTypeController {
+    private static String REPORTS_DIR = System.getProperty("user.dir") + "\\reports";
     @Autowired
     private DiseaseTypeServiceImpl diseaseTypeService;
 
@@ -56,6 +66,39 @@ public class DiseaseTypeController {
             diseaseTypeService.delete(id);
         }
         return "redirect:/disease-types/main";
+    }
+
+    @GetMapping("/generate-doc/{id}")
+    public ResponseEntity<Resource> generateDoc(Model model, @PathVariable("id") Long id) throws FileNotFoundException {
+        DiseaseType diseaseType = diseaseTypeService.findOneById(id).get();
+        if(diseaseType == null){
+            return null;
+        }
+        List<Disease> diseases = diseaseType.getDiseases();
+        if(diseases.isEmpty()){
+            return null;
+        }
+        StringBuilder content = new StringBuilder();
+        int count = 0;
+        for(Disease disease : diseases){
+            count++;
+            content.append(count + ") " + disease.getVisiting().getDate() + "\n");
+            content.append(disease.getDescription() + "\n\n");
+        }
+        String fileName = "Type" + ".txt";
+        String filePath = REPORTS_DIR + File.separator + fileName;
+        File file = new File(filePath);
+        try(FileWriter writer = new FileWriter(file)){
+            writer.write(content.toString());
+            writer.flush();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        ResponseEntity<Resource> resource = Downloader.downloadFile(fileName);
+        model.addAttribute("report", resource);
+        return resource;
+
     }
 
 }
