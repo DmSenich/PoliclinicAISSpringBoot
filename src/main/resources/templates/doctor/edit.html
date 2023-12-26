@@ -10,26 +10,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Форма информации о докторе</h1>
     <form action="#" th:action="@{/doctors/update}" th:object="${doctor}"
           method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}"/>
         <p>Фамилия:
-            <input type="text" placeholder="Введите фамилию" th:field="*{lastName}"/></p>
+            <input type="text" placeholder="Введите фамилию" th:field="*{lastName}" pattern="[A-Za-zА-Яа-яЁё]+" required="required"/></p>
         <p>Имя:
-            <input type="text" placeholder="Введите имя" th:field="*{firstName}"/></p>
+            <input type="text" placeholder="Введите имя" th:field="*{firstName}" pattern="[A-Za-zА-Яа-яЁё]+" required="required"/></p>
         <p>Отчество:
-            <input type="text" placeholder="Введите отчество" th:field="*{patr}"/></p>
+            <input type="text" placeholder="Введите отчество" th:field="*{patr}" pattern="[A-Za-zА-Яа-яЁё]*"/></p>
         <p>Стаж работы:
             <input type="text" placeholder="Введите стаж в годах" th:field="*{workExp}"/></p>
         <input type="hidden" th:field="*{pathPhoto}">
         <p>Фото:
-            <input type="file"accept="image/*" name="file" th:id="file"/>
+            <input type="file" accept="image/*" name="file" th:id="file"/>
         </p>
 
         <p><input type="submit" value="Отправить"/>
-            <input type="reset" value="Сброс"/></p>
+            <input type="reset" value="Сброс" th:onclick="@{'window.location.href = \'/doctors/details/' + ${doctor.id} + '\''}"/></p>
     </form>
 </div>
 </body>

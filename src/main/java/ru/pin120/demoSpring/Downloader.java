@@ -1,4 +1,4 @@
-package ru.pin120.demoSpring.controllers;
+package ru.pin120.demoSpring;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;

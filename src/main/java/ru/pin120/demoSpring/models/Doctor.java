@@ -42,8 +42,6 @@ public class Doctor {
     @Column(name = "pathphoto")
     private String pathPhoto;
     /** Список специальностей */
-    @Transient
-    private byte[] photo;
     @ManyToMany
     @JoinTable(name = "doctors_specialties",
     joinColumns = @JoinColumn(name = "idspecialty"),

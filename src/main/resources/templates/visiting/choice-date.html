@@ -10,6 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Выбор даты</h1>
     <form action="#" th:action="@{/visitings/choice-date}"
@@ -17,9 +18,8 @@
 <!--        <input type="hidden" th:value="${iddoctor}"/>-->
 <!--        <input type="hidden" th:value="${idpatient}"/>-->
         <p>Дата:
-            <input type="date" placeholder="Выберите дату" th:value="${date}" th:name="date"/></p>
-        <p><input type="submit" value="Отправить"/>
-            <input type="reset" value="Сброс"/></p>
+            <input type="date" placeholder="Выберите дату" th:value="${date}" th:name="date" required="required"/></p>
+        <p><input type="submit" value="Отправить"/></p>
     </form>
 </div>
 </body>

@@ -10,9 +10,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Пациенты</h1>
     <span th:if="${patients.size() == 0}">Список пациентов пуст<br></span>
+    <a class="btn btn-secondary" th:href="@{'/patients/new'}">Добавить пациента</a>
     <table th:if="${patients.size() > 0}" class="table table-hover">
         <thead class="thead-dark">
         <tr>
@@ -37,7 +39,7 @@ ${patient.id}}">Удалить</a></td>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-secondary" th:href="@{'/patients/new'}">Добавить пациента</a>
+
 </div>
 </body>
 </html>

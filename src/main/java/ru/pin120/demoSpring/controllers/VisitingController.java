@@ -43,7 +43,7 @@ public class VisitingController {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date selectDate = null;
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
 
     @GetMapping("/main")
     public String getVisitings(Model model){
@@ -168,6 +168,7 @@ public class VisitingController {
 //        Patient patient = patientService.findOneById(idpat).get();
 //        model.addAttribute("doctor", doctor);
 //        model.addAttribute("patient", patient);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         selectDate = formatter.parse(dateString);
         return "redirect:/visitings/confirm-create";
     }
@@ -177,6 +178,7 @@ public class VisitingController {
         Doctor doctor = doctorService.findOneById(selectIdDoctor).get();
         Patient patient = patientService.findOneById(selectIdPatient).get();
         //doctor.setSpecialties(null);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Visiting visiting = new Visiting();
         visiting.setDoctor(doctor);
         visiting.setPatient(patient);
@@ -190,6 +192,7 @@ public class VisitingController {
         model.addAttribute("visiting", visiting);
         return "visiting\\confirm-create";
     }
+
     @PostMapping("/confirm-create")
     public String confirmCreate(@ModelAttribute Visiting visiting, Model model){
         visitingService.create(visiting.getDoctor(), visiting.getPatient(), visiting.getDate());
@@ -237,10 +240,12 @@ public class VisitingController {
 
     @GetMapping("/delete/{id}")
     public String deleteVisiting(Model model, @PathVariable("id") Long id){
+        long docId = 0;
         if(visitingService.existsById(id)){
+            docId = visitingService.findOneById(id).get().getDoctor().getId();
             visitingService.delete(id);
         }
-        return "redirect:/visitings/main";
+        return "redirect:/doctors/details/"+docId+"/visitings";
     }
 
 

@@ -10,15 +10,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
+
     <h1>Поставленные диагнозы</h1>
     <span th:if="${diseases.size() == 0}">Список диагнозов пуст<br></span>
+    <a class="btn btn-secondary" th:href="@{'/visitings/details/'+${idVisiting}+'/diseases/new'}">Добавить диагноз</a>
     <table th:if="${diseases.size() > 0}" class="table table-hover">
         <thead class="thead-dark">
         <tr>
             <td><b> Название диагноза </b></td>
-            <td><b> Описание диагноза </b></td>
             <td><b> Дата </b></td>
+            <td><b> Описание диагноза </b></td>
             <td><b>Действия</b></td>
             <td></td>
         </tr>
@@ -26,28 +29,30 @@
         <tbody>
         <tr th:each="disease : ${diseases}">
             <td th:text="${disease.diseaseType.name}"/>
-            <td th:text="${disease.description}"/>
-            <td th:text="${disease.visiting.date}"/>
-            <div th:if="OnlyVisiting == true">
-                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +
-${disease.id}}">Информация</a></td>
-                <td><a class="btn btn-warning" th:href="@{'/visitings/details/' +${disease.visiting.id}+'/diseases/update/' +
-${disease.id}}">Редактировать</a></td>
+            <td th:text="${disease.visiting.date}">
+            <td >
+                <textarea rows="6" cols="50" readonly th:text="${disease.description}"/>
+             </td>
+            <div th:if="${OnlyVisiting == true}">
+<!--                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +-->
+<!--${disease.id}}">Информация</a></td>-->
+<!--                <td><a class="btn btn-warning" th:href="@{'/visitings/details/' +${disease.visiting.id}+'/diseases/update/' +-->
+<!--${disease.id}}">Редактировать</a></td>-->
                 <td><a class="btn btn-danger" th:href="@{'/visitings/details/' +${disease.visiting.id}+'/diseases/delete/' +
 ${disease.id}}">Удалить</a></td>
             </div>
-            <div th:unless="OnlyVisiting == true">
-                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +
-${disease.id}}">Информация</a></td>
-                <td><a class="btn btn-warning" th:href="@{'/diseases/update/' +
-${disease.id}}">Редактировать</a></td>
+            <div th:unless="${OnlyVisiting == true}">
+<!--                <td><a class="btn btn-info" th:href="@{'/diseases/details/' +-->
+<!--${disease.id}}">Информация</a></td>-->
+<!--                <td><a class="btn btn-warning" th:href="@{'/diseases/update/' +-->
+<!--${disease.id}}">Редактировать</a></td>-->
                 <td><a class="btn btn-danger" th:href="@{'/diseases/delete/' +
 ${disease.id}}">Удалить</a></td>
             </div>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-secondary" th:href="@{'/visitings/details/'+${idVisiting}+'/diseases/new'}">Добавить диагноз</a>
+
 </div>
 </body>
 </html>

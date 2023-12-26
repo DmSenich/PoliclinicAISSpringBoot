@@ -7,25 +7,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
+import ru.pin120.demoSpring.Downloader;
 import ru.pin120.demoSpring.models.Doctor;
-import ru.pin120.demoSpring.models.Patient;
 import ru.pin120.demoSpring.models.Specialty;
 import ru.pin120.demoSpring.models.Visiting;
 import ru.pin120.demoSpring.service.serviceImpl.DoctorServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.SpecialtyServiceImpl;
 
-import javax.naming.spi.DirectoryManager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,9 +32,11 @@ import java.util.stream.Collectors;
 public class DoctorController {
     private static String PHOTO_DIR = System.getProperty("user.dir") + "\\photos";
     private static String REPORTS_DIR = System.getProperty("user.dir") + "\\reports";
-    private @DateTimeFormat(pattern = "yyyy-MM-dd") Date minDate = null, maxDate = null;
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private static String VoidTXT = "void.txt";
     private static String defaultPhoto = "defaultPhoto.jpeg";
+    private @DateTimeFormat(pattern = "yyyy-MM-dd") Date minDate = null, maxDate = null;
+
+
     @Autowired
     private DoctorServiceImpl doctorService;
     @Autowired
@@ -57,7 +57,7 @@ public class DoctorController {
         return "doctor\\new";
     }
     @PostMapping("/new")
-    public String newDoctor(@ModelAttribute Doctor doctor,@RequestPart(name = "file", required = false) MultipartFile file, Model model){
+    public String newDoctor(@ModelAttribute Doctor doctor, @RequestPart(name = "file", required = false) MultipartFile file, Model model){
 //        MultipartFile file = doctor.getPhotoFile();
 //        byte[] photo = null;
 //        try{
@@ -72,6 +72,11 @@ public class DoctorController {
             File dirPhoto = new File(PHOTO_DIR);
             if(!dirPhoto.exists()){
                 dirPhoto.mkdir();
+            }
+            File defPhoto = new File(PHOTO_DIR, defaultPhoto);
+            if(!defPhoto.exists()){
+                Path defPhotoPath = defPhoto.toPath();
+                Files.copy(getClass().getClassLoader().getResourceAsStream("static/" + defaultPhoto), defPhotoPath);
             }
             Path filePath;
             StringBuilder filename = new StringBuilder();
@@ -94,23 +99,38 @@ public class DoctorController {
     }
 
     @GetMapping("/details/{id}")
-    public String detailsDoctor(Model model, @PathVariable("id") Long id){
+    public String detailsDoctor(Model model, @PathVariable("id") Long id) throws IOException {
         Optional<Doctor> optionalDoctor = doctorService.findOneById(id);
         if(optionalDoctor.isEmpty()){
             return "redirect:/doctors/main";
         }
+        File dirPhoto = new File(PHOTO_DIR);
+        if(!dirPhoto.exists()){
+            dirPhoto.mkdir();
+        }
+        File defPhoto = new File(PHOTO_DIR, defaultPhoto);
+        if(!defPhoto.exists()){
+            Path defPhotoPath = defPhoto.toPath();
+            Files.copy(getClass().getClassLoader().getResourceAsStream("static/" + defaultPhoto), defPhotoPath);
+        }
+        File photoFile = new File(PHOTO_DIR,optionalDoctor.get().getPathPhoto());
+        if(!photoFile.exists()){
+            optionalDoctor.get().setPathPhoto(defaultPhoto);
+        }
         Path fullPathPhoto = Path.of(PHOTO_DIR,optionalDoctor.get().getPathPhoto());
         byte[] photo;
+        String type = "png";
+        String encodedPhoto = "";
         try {
             photo = Files.readAllBytes(fullPathPhoto);
+            String[] fullpath = optionalDoctor.get().getPathPhoto().split("\\.");
+            type = fullpath[fullpath.length - 1];
+            encodedPhoto = Base64.getEncoder().encodeToString(photo);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             photo = null;
         }
-        optionalDoctor.get().setPhoto(photo);
-        String[] fullpath = optionalDoctor.get().getPathPhoto().split("\\.");
-        String type = fullpath[fullpath.length - 1];
-        String encodedPhoto = Base64.getEncoder().encodeToString(photo);
+
         model.addAttribute("type", type);
         model.addAttribute("encodedPhoto", encodedPhoto);
         model.addAttribute("doctor", optionalDoctor.get());
@@ -176,6 +196,7 @@ public class DoctorController {
                 if(!dirPhoto.exists()){
                     dirPhoto.mkdir();
                 }
+
                 Path filePath = Paths.get(PHOTO_DIR, file.getOriginalFilename());
                 filename.append(file.getOriginalFilename());
                 File newFile = new File(filePath.toString());
@@ -189,7 +210,7 @@ public class DoctorController {
         List<Specialty> specialties = doctorService.findOneById(doctor.getId()).get().getSpecialties();
         List<Visiting> visitings = doctorService.findOneById(doctor.getId()).get().getVisitings();
         doctorService.update(doctor.getId(), doctor.getFirstName(),doctor.getLastName(),doctor.getPatr(), doctor.getWorkExp(), doctor.getPathPhoto(), specialties, visitings);
-        return "redirect:/doctors/main";
+        return "redirect:/doctors/details/" + doctor.getId();
     }
 
     @GetMapping("/update-specialties/{id}")
@@ -241,10 +262,12 @@ public class DoctorController {
 
     @GetMapping("/details/{id}/visitings/generate-doc")
     public ResponseEntity<Resource> generateDoc(Model model, @PathVariable("id") Long id) throws FileNotFoundException {
-        Doctor doctor = doctorService.findOneById(id).get();
-        if(doctor == null){
-            return null;
+        Optional<Doctor> doctorOptional = doctorService.findOneById(id);
+        if(doctorOptional.isEmpty()){
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
+        Doctor doctor = doctorOptional.get();
         List<Visiting> allVisitings = doctor.getVisitings();
         List<Visiting> visitings = new ArrayList<>(allVisitings);
         if(minDate != null && maxDate != null){
@@ -259,7 +282,8 @@ public class DoctorController {
             }
         }
         if(visitings.isEmpty()){
-            return null;
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
         StringBuilder content = new StringBuilder();
         int count = 0;
@@ -269,6 +293,7 @@ public class DoctorController {
             content.append("неограниченный\n");
         }
         else{
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             if(minDate != null){
                 content.append("от " + formatter.format(minDate) + " ");
             }
@@ -294,8 +319,6 @@ public class DoctorController {
             e.printStackTrace();
         }
         ResponseEntity<Resource> resource = Downloader.downloadFile(fileName);
-        model.addAttribute("report", resource);
         return resource;
-
     }
 }

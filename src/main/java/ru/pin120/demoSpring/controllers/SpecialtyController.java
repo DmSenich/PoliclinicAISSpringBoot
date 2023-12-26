@@ -6,11 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.pin120.demoSpring.models.Disease;
-import ru.pin120.demoSpring.models.DiseaseType;
+import ru.pin120.demoSpring.Downloader;
 import ru.pin120.demoSpring.models.Doctor;
 import ru.pin120.demoSpring.models.Specialty;
-import ru.pin120.demoSpring.service.serviceImpl.DoctorServiceImpl;
 import ru.pin120.demoSpring.service.serviceImpl.SpecialtyServiceImpl;
 
 import java.io.File;
@@ -24,6 +22,7 @@ import java.util.Optional;
 @RequestMapping("/specialties")
 public class SpecialtyController {
     private static String REPORTS_DIR = System.getProperty("user.dir") + "\\reports";
+    private static String VoidTXT = "void.txt";
     @Autowired
     private SpecialtyServiceImpl specialtyService;
 
@@ -69,13 +68,16 @@ public class SpecialtyController {
 
     @GetMapping("/generate-doc/{id}")
     public ResponseEntity<Resource> generateDoc(Model model, @PathVariable("id") Long id) throws FileNotFoundException {
-        Specialty specialty = specialtyService.findOneById(id).get();
-        if(specialty == null){
-            return null;
+        Optional<Specialty> specialtyOptional = specialtyService.findOneById(id);
+        if(specialtyOptional.isEmpty()){
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
+        Specialty specialty = specialtyOptional.get();
         List<Doctor> doctors = specialty.getDoctors();
         if(doctors.isEmpty()){
-            return null;
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
         StringBuilder content = new StringBuilder();
         int count = 0;
@@ -98,7 +100,6 @@ public class SpecialtyController {
             e.printStackTrace();
         }
         ResponseEntity<Resource> resource = Downloader.downloadFile(fileName);
-        model.addAttribute("report", resource);
         return resource;
 
     }

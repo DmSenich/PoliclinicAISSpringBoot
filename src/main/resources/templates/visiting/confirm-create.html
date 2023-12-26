@@ -10,6 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Запись на прием</h1>
     <div>
@@ -24,13 +25,13 @@
 
         </p>
     </div>
-    <form action="#" th:action="@{/visitings/confirm-create}" th:object="${visiting}"
+    <form  th:action="@{/visitings/confirm-create}" th:object="${visiting}"
           method="post">
         <input type="hidden"  th:field="*{doctor}">
         <input type="hidden" th:field="*{patient}">
         <input type="hidden"  th:field="*{date}"/>
         <p><input type="submit" value="Завершить"/>
-            <input type="reset" value="Сброс"/></p>
+            <input type="reset" value="Сброс" th:onclick="'window.location.href = \'/visitings/main\''"/></p>
     </form>
 <!--    <a class="btn btn-secondary" th:href="@{'/patients/new'}">Завершить</a>-->
 </div>

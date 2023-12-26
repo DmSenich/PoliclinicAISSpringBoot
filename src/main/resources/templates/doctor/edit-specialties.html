@@ -10,10 +10,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Специальности доктора</h1>
     <table class="table table-hover">
-        <a class="btn btn-secondary" th:href="@{'/doctors/main'}">Доктора</a>
+        <a class="btn btn-secondary" th:href="@{'/doctors/details/' + ${doctor.id}}">Вернуться к доктору</a>
         <thead class="thead-dark">
         <tr>
             <td><b>Специальности</b></td>

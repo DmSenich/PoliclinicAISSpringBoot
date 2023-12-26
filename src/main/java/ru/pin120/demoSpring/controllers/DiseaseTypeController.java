@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.pin120.demoSpring.Downloader;
 import ru.pin120.demoSpring.models.Disease;
 import ru.pin120.demoSpring.models.DiseaseType;
 import ru.pin120.demoSpring.service.serviceImpl.DiseaseTypeServiceImpl;
-import ru.pin120.demoSpring.service.serviceImpl.SpecialtyServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +24,7 @@ import static org.springframework.beans.factory.support.InstanceSupplier.using;
 @RequestMapping("/disease-types")
 public class DiseaseTypeController {
     private static String REPORTS_DIR = System.getProperty("user.dir") + "\\reports";
+    private static String VoidTXT = "void.txt";
     @Autowired
     private DiseaseTypeServiceImpl diseaseTypeService;
 
@@ -70,13 +71,16 @@ public class DiseaseTypeController {
 
     @GetMapping("/generate-doc/{id}")
     public ResponseEntity<Resource> generateDoc(Model model, @PathVariable("id") Long id) throws FileNotFoundException {
-        DiseaseType diseaseType = diseaseTypeService.findOneById(id).get();
-        if(diseaseType == null){
-            return null;
+        Optional<DiseaseType> diseaseTypeOptional = diseaseTypeService.findOneById(id);
+        if(diseaseTypeOptional.isEmpty()){
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
+        DiseaseType diseaseType = diseaseTypeOptional.get();
         List<Disease> diseases = diseaseType.getDiseases();
         if(diseases.isEmpty()){
-            return null;
+            ResponseEntity<Resource> resource = Downloader.downloadFile(VoidTXT);
+            return resource;
         }
         StringBuilder content = new StringBuilder();
         int count = 0;
@@ -96,7 +100,6 @@ public class DiseaseTypeController {
             e.printStackTrace();
         }
         ResponseEntity<Resource> resource = Downloader.downloadFile(fileName);
-        model.addAttribute("report", resource);
         return resource;
 
     }

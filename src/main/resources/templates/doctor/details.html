@@ -10,24 +10,43 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Форма информации о докторе</h1>
-    <dl class="row">
-        <dt class="col-sm-2" >Фамилия</dt>
-        <dd class="col-sm-10" th:text = "${doctor.lastName}"></dd>
-        <dt class="col-sm-2">Имя</dt>
-        <dd class="col-sm-10" th:text = "${doctor.firstName}"></dd>
-        <dt class="col-sm-2">Отчество</dt>
-        <dd class="col-sm-10" th:text = "${doctor.patr}"></dd>
-        <dt class="col-sm-2">Стаж в годах</dt>
-        <dd class="col-sm-10" th:text = "${doctor.workExp}"></dd>
-    </dl>
-
-    <p>Фото:
+    <div>
+        <p >Фото:</p>
         <img  th:src="@{'data:image/' + ${type} +';base64,' + ${encodedPhoto}}" width="256dp" alt="Doctor Photo"/>
-    </p>
+    </div>
+
+<!--    <dl class="row">-->
+<!--        <dt class="col-sm-2" >Фамилия</dt>-->
+<!--        <dd class="col-sm-10" th:text = "${doctor.lastName}"></dd>-->
+<!--        <dt class="col-sm-2">Имя</dt>-->
+<!--        <dd class="col-sm-10" th:text = "${doctor.firstName}"></dd>-->
+<!--        <dt class="col-sm-2">Отчество</dt>-->
+<!--        <dd class="col-sm-10" th:text = "${doctor.patr}"></dd>-->
+<!--        <dt class="col-sm-2">Стаж в годах</dt>-->
+<!--        <dd class="col-sm-10" th:text = "${doctor.workExp}"></dd>-->
+<!--    </dl>-->
+        <div>
+            <dt class="col-sm-2" >Фамилия</dt>
+            <dd class="col-sm-10" th:text = "${doctor.lastName}"></dd>
+            <dt class="col-sm-2">Имя</dt>
+            <dd class="col-sm-10" th:text = "${doctor.firstName}"></dd>
+            <dt class="col-sm-2">Отчество</dt>
+            <dd class="col-sm-10" th:text = "${doctor.patr}"></dd>
+            <dt class="col-sm-2">Стаж в годах</dt>
+            <dd class="col-sm-10" th:text = "${doctor.workExp}"></dd>
+            <dt class="col-sm-2">Специальности</dt>
+            <dd class="col-sm-10" th:text = "${doctor.getStringSpecialties()}"></dd>
+        </div>
+    <a class="btn btn-warning" th:href="@{'/doctors/update/' +
+${doctor.id}}">Редактировать</a>
+    <a class="btn btn-warning" th:href="@{'/doctors/update-specialties/' +
+${doctor.id}}">Изменить специальности</a>
 
 
+    <a class="btn btn-secondary" th:href="@{'/doctors/details/' + ${doctor.id} + '/visitings'}">Визиты</a>
 
 
 </div>

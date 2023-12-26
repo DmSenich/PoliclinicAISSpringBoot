@@ -88,7 +88,7 @@ public class PatientController {
         //Patient p = (Patient) model.getAttribute("patient");
         List<Visiting> visitings = patientService.findOneById(patient.getId()).get().getVisitings();
         patientService.update(patient.getId(), patient.getFirstName(),patient.getLastName(), patient.getPatr(), patient.getBirthDate(), patient.getArea(), patient.getCity(), patient.getHouse(), patient.getApartment(), visitings);
-        return "redirect:/patients/main";
+        return "redirect:/patients/details/" + patient.getId();
     }
 
     @GetMapping("/delete/{id}")

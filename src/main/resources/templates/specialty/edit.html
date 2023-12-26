@@ -10,15 +10,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div th:replace="fragments/navbars :: navbarFragment"/>
 <div class="container">
     <h1>Название специальности</h1>
     <form action="#" th:action="@{/specialties/update}" th:object="${specialty}"
           method="post">
         <input type="hidden" th:field="*{id}"/>
         <p>Название:
-            <input type="text" placeholder="Введите название" th:field="*{name}"/></p>
+            <input type="text" placeholder="Введите название" th:field="*{name}" pattern="[A-Za-zА-Яа-яЁё]+" required="required"/></p>
         <p><input type="submit" value="Отправить"/>
-            <input type="reset" value="Сброс"/></p>
+            <input type="reset" value="Сброс" th:onclick="'window.location.href = \'/specialties/main\''"/></p>
     </form>
 </div>
 </body>

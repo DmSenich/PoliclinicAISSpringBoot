@@ -23,7 +23,7 @@ public class DiseaseController {
     private long selectIdType = -1;
     private long selectIdVisiting = -1;
     @GetMapping("/diseases/main")
-    public String getDisease(Model model){
+    public String getDiseasesFull(Model model){
         List<Disease> diseases =
                 (List<Disease>)diseaseService.findAll();
         selectIdType = -1;
@@ -34,7 +34,7 @@ public class DiseaseController {
         return "disease\\main";
     }
     @GetMapping("/visitings/details/{id-visiting}/diseases/main")
-    public String getDiseaseFull(@PathVariable("id-visiting") Long idVisiting,Model model){
+    public String getDiseasesVisiting(@PathVariable("id-visiting") Long idVisiting,Model model){
         List<Disease> diseases =
                 (List<Disease>)visitingService.findOneById(idVisiting).get().getDiseases();
         model.addAttribute("diseases", diseases);
@@ -55,7 +55,7 @@ public class DiseaseController {
 //        return "redirect:/diseases/main";
 //    }
     @GetMapping("/visitings/details/{id-visiting}/diseases/new")
-    public String newDiseaseFull(@PathVariable("id-visiting") long idVisitind, Model model){
+    public String newDiseaseVisiting(@PathVariable("id-visiting") long idVisitind, Model model){
         selectIdVisiting = idVisitind;
 //        List<DiseaseType> diseaseTypes = diseaseTypeService.findAll().stream().toList();
 //        model.addAttribute("diseaseTypes", diseaseTypes);
@@ -73,7 +73,7 @@ public class DiseaseController {
         return "disease\\new";
     }
     @PostMapping("/visitings/{id-visiting}/diseases/new")
-    public String newDiseaseFull(@ModelAttribute("disease") Disease disease, Model model){
+    public String newDiseaseVisiting(@ModelAttribute("disease") Disease disease, Model model){
         diseaseService.create(disease.getDiseaseType(), disease.getDescription(), disease.getVisiting());
         selectIdType= -1;
         selectIdVisiting = -1;
@@ -143,19 +143,21 @@ public class DiseaseController {
 //    }
 
     @GetMapping("/diseases/delete/{id}")
-    public String deleteDisease(Model model, @PathVariable("id") Long id){
+    public String deleteDiseaseFull(Model model, @PathVariable("id") Long id){
         if(diseaseService.existsById(id)){
             diseaseService.delete(id);
         }
+        model.addAttribute("OnlyVisiting", false);
         return "redirect:/diseases/main";
     }
     @GetMapping("/visitings/details/{id-visiting}/diseases/delete/{id}")
-    public String deleteDiseaseFull(Model model, @PathVariable("id") Long id){
+    public String deleteDiseaseVisiting(Model model, @PathVariable("id") Long id){
         Visiting visiting = new Visiting();
         if(diseaseService.existsById(id)){
             visiting = diseaseService.findOneById(id).get().getVisiting();
             diseaseService.delete(id);
         }
+        model.addAttribute("OnlyVisiting", true);
         return "redirect:/visitings/details/"+ visiting.getId()+"/diseases/main";
     }
 }

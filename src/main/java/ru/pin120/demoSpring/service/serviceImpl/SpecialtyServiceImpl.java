@@ -6,8 +6,6 @@ import ru.pin120.demoSpring.models.Doctor;
 import ru.pin120.demoSpring.models.Specialty;
 import ru.pin120.demoSpring.repository.DoctorRepository;
 import ru.pin120.demoSpring.repository.SpecialtyRepository;
-import ru.pin120.demoSpring.repository.repositoryImpl.DoctorRepositoryImpl;
-import ru.pin120.demoSpring.repository.repositoryImpl.SpecialtyRepositoryImpl;
 import ru.pin120.demoSpring.service.SpecialtyService;
 
 import java.sql.Connection;
